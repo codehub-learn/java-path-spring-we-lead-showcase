@@ -30,11 +30,10 @@
 	</Appenders>
 
 	<Loggers>
-		<AsyncLogger name="gr.codelearn.spring" level="trace" additivity="false">
+		<AsyncLogger name="gr.codelearn.spring" level="debug" additivity="false">
 			<AppenderRef ref="ConsoleAppender"/>
 			<AppenderRef ref="RollingRandomAccessFileAppender"/>
 		</AsyncLogger>
-
 		<Root level="info">
 			<AppenderRef ref="ConsoleAppender"/>
 			<AppenderRef ref="RollingRandomAccessFileAppender"/>
