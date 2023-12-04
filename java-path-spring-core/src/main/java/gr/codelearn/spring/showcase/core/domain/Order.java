@@ -18,5 +18,5 @@ public class Order {
 	private User user;
 	private Date submitDate;
 	private List<OrderItem> orderItems;
-	private BigDecimal price;
+	private BigDecimal cost;
 }

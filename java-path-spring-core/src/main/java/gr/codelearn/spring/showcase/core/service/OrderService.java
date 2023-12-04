@@ -9,15 +9,15 @@ import java.util.List;
 public interface OrderService {
 	Order initiateOrder(User user);
 
-	void addItem(Order order, Product product, int quantity);
+	List<Order> getOrders();
+
+	Order getOrder(Long id);
+
+	void addItem(Order Order, Product product, int quantity);
 
 	void updateItem(Order order, Product product, int quantity);
 
 	void removeItem(Order order, Product product);
-
-	List<Order> getOrders();
-
-	Order getOrder(Long id);
 
 	void checkout(Order order);
 }
