@@ -10,5 +10,5 @@ import java.io.Serializable;
 @Setter
 @ToString
 public class BaseResource implements Serializable {
-	protected Long id;
+	private Long id;
 }
