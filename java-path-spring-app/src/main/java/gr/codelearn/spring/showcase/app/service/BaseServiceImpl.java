@@ -6,6 +6,7 @@ import gr.codelearn.spring.showcase.app.repository.BaseRepository;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public abstract class BaseServiceImpl<T extends BaseModel> extends BaseComponent implements BaseService<T, Long> {
 	protected abstract BaseRepository<T, Long> getRepository();
@@ -43,6 +44,9 @@ public abstract class BaseServiceImpl<T extends BaseModel> extends BaseComponent
 
 	@Override
 	public T get(final Long id) {
+		if (getRepository().get(id) == null) {
+			throw new NoSuchElementException(String.format("Resource with id [%d] not found", id));
+		}
 		return getRepository().get(id);
 	}
 
