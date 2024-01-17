@@ -2,65 +2,79 @@ package gr.codelearn.spring.showcase.app.service;
 
 import gr.codelearn.spring.showcase.app.base.BaseComponent;
 import gr.codelearn.spring.showcase.app.model.BaseModel;
-import gr.codelearn.spring.showcase.app.repository.BaseRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.NoSuchElementException;
 
+@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
 public abstract class BaseServiceImpl<T extends BaseModel> extends BaseComponent implements BaseService<T, Long> {
-	protected abstract BaseRepository<T, Long> getRepository();
+	protected abstract JpaRepository<T, Long> getRepository();
 
+	@SafeVarargs
 	@Override
-	public T create(final T item) {
-		return getRepository().create(item);
-	}
-
-	@Override
-	public List<T> createAll(final T... items) {
+	public final List<T> createAll(final T... items) {
 		return createAll(Arrays.asList(items));
 	}
 
 	@Override
 	public List<T> createAll(final List<T> items) {
-		return getRepository().createAll(items);
+		return getRepository().saveAll(items);
+	}
+
+	@Override
+	public T create(final T item) {
+		logger.trace("Creating {}.", item);
+		return getRepository().save(item);
 	}
 
 	@Override
 	public void update(final T item) {
-		getRepository().update(item);
-
+		logger.trace("Updating {}.", item);
+		getRepository().save(item);
 	}
 
 	@Override
 	public void delete(final T item) {
-		getRepository().delete(item);
+		final T itemFound = getRepository().getReferenceById(item.getId());
+		logger.trace("Deleting {}.", itemFound);
+		getRepository().delete(itemFound);
 	}
 
 	@Override
 	public void deleteById(final Long id) {
+		final T itemFound = getRepository().getReferenceById(id);
+		logger.trace("Deleting {}.", itemFound);
 		getRepository().deleteById(id);
 	}
 
 	@Override
-	public T get(final Long id) {
-		if (getRepository().get(id) == null) {
-			throw new NoSuchElementException(String.format("Resource with id [%d] not found", id));
-		}
-		return getRepository().get(id);
-	}
-
-	@Override
+	@Transactional(readOnly = true)
 	public boolean exists(final T item) {
-		return getRepository().exists(item);
+		logger.trace("Checking whether {} exists.", item);
+		return getRepository().existsById(item.getId());
 	}
 
 	@Override
+	@Transactional(readOnly = true)
+	public T get(final Long id) {
+		T item = getRepository().findById(id).orElseThrow();
+		logger.trace("Item found matching id:{}.", id);
+		return item;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
 	public List<T> findAll() {
+		logger.trace("Retrieving all items.");
 		return getRepository().findAll();
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Long count() {
 		return getRepository().count();
 	}

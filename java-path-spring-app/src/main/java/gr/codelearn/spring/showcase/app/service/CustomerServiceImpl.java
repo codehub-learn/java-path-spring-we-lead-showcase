@@ -1,9 +1,9 @@
 package gr.codelearn.spring.showcase.app.service;
 
 import gr.codelearn.spring.showcase.app.model.Customer;
-import gr.codelearn.spring.showcase.app.repository.BaseRepository;
 import gr.codelearn.spring.showcase.app.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,7 +12,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer> implements Cu
 	private final CustomerRepository customerRepository;
 
 	@Override
-	protected BaseRepository<Customer, Long> getRepository() {
+	protected JpaRepository<Customer, Long> getRepository() {
 		return customerRepository;
 	}
 

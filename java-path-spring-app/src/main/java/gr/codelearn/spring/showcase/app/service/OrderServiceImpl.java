@@ -5,9 +5,9 @@ import gr.codelearn.spring.showcase.app.model.Order;
 import gr.codelearn.spring.showcase.app.model.OrderItem;
 import gr.codelearn.spring.showcase.app.model.PaymentMethod;
 import gr.codelearn.spring.showcase.app.model.Product;
-import gr.codelearn.spring.showcase.app.repository.BaseRepository;
 import gr.codelearn.spring.showcase.app.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -20,7 +20,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
 	private final OrderRepository orderRepository;
 
 	@Override
-	protected BaseRepository<Order, Long> getRepository() {
+	protected JpaRepository<Order, Long> getRepository() {
 		return orderRepository;
 	}
 
