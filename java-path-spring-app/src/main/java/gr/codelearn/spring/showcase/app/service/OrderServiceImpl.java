@@ -3,6 +3,7 @@ package gr.codelearn.spring.showcase.app.service;
 import gr.codelearn.spring.showcase.app.model.Customer;
 import gr.codelearn.spring.showcase.app.model.Order;
 import gr.codelearn.spring.showcase.app.model.OrderItem;
+import gr.codelearn.spring.showcase.app.model.OrderStatus;
 import gr.codelearn.spring.showcase.app.model.PaymentMethod;
 import gr.codelearn.spring.showcase.app.model.Product;
 import gr.codelearn.spring.showcase.app.repository.OrderRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +49,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
 		}
 
 		if (!increasedQuantity) {
-			order.getOrderItems().add(newOrderItem(product, quantity));
+			order.getOrderItems().add(newOrderItem(order, product, quantity));
 		}
 
 		logger.trace("Product[{}] added to Order[{}]", product, order);
@@ -60,7 +62,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
 		}
 
 		order.getOrderItems().removeIf(oi -> oi.getProduct().getSerial().equals(product.getSerial()));
-		order.getOrderItems().add(newOrderItem(product, quantity));
+		order.getOrderItems().add(newOrderItem(order, product, quantity));
 
 		logger.trace("Product[{}] updated in Order[{}]", product, order);
 	}
@@ -87,9 +89,18 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
 		order.setPaymentMethod(paymentMethod);
 		order.setSubmitDate(new Date());
 		order.setCost(giveDiscounts(order));
+		order.setStatus(OrderStatus.COMPLETED);
 
 		return create(order);
 
+	}
+
+	public Optional<Order> findWithCustomer(Long id) {
+		return orderRepository.findWithCustomer(id);
+	}
+
+	public Optional<Order> findWithAllAssociations(Long id) {
+		return orderRepository.findWithAllAssociations(id);
 	}
 
 	private boolean checkNullability(Order order, Product product) {
@@ -108,8 +119,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
 		return order != null && !order.getOrderItems().isEmpty() && order.getCustomer() != null;
 	}
 
-	private OrderItem newOrderItem(Product product, int quantity) {
-		return OrderItem.builder().product(product).quantity(quantity).price(product.getPrice()).build();
+	private OrderItem newOrderItem(Order order, Product product, int quantity) {
+		return OrderItem.builder().product(product).quantity(quantity).price(product.getPrice()).order(order).build();
 	}
 
 	private BigDecimal giveDiscounts(Order order) {
@@ -132,3 +143,4 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
 		return finalCost;
 	}
 }
+

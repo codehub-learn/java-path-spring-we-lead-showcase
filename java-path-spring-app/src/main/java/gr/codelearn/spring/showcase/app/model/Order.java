@@ -25,11 +25,9 @@ import java.util.Set;
 @Table(name = "ORDERS")
 @SequenceGenerator(name = "idGenerator", sequenceName = "ORDERS_SEQ", initialValue = 1, allocationSize = 1)
 public class Order extends BaseModel {
-	@ToString.Exclude
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private Customer customer;
 
-	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	@Builder.Default

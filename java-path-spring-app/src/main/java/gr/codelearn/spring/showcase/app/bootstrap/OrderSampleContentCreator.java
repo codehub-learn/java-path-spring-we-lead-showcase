@@ -80,8 +80,6 @@ public class OrderSampleContentCreator extends BaseComponent implements CommandL
 		// Checkout 4th order
 		orderService.checkout(fourthOrder, PaymentMethod.CREDIT_CARD);
 
-		logger.debug("{}.", orderService.get(1L));
-
 		// **** SOME EXTRA ORDERS FOR SHOWCASING WITHIN THE APPLICATION **** //
 		// customer and order
 		Customer c5 = customerService.get(5L);

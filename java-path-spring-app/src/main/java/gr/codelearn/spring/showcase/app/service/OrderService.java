@@ -5,6 +5,8 @@ import gr.codelearn.spring.showcase.app.model.Order;
 import gr.codelearn.spring.showcase.app.model.PaymentMethod;
 import gr.codelearn.spring.showcase.app.model.Product;
 
+import java.util.Optional;
+
 public interface OrderService extends BaseService<Order, Long> {
 	Order initiateOrder(Customer customer);
 
@@ -16,4 +18,7 @@ public interface OrderService extends BaseService<Order, Long> {
 
 	Order checkout(Order order, PaymentMethod paymentMethod);
 
+	Optional<Order> findWithCustomer(Long id);
+
+	Optional<Order> findWithAllAssociations(Long id);
 }
