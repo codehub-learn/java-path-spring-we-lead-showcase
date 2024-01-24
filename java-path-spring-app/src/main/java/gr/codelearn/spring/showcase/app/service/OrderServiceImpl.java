@@ -7,6 +7,8 @@ import gr.codelearn.spring.showcase.app.model.OrderStatus;
 import gr.codelearn.spring.showcase.app.model.PaymentMethod;
 import gr.codelearn.spring.showcase.app.model.Product;
 import gr.codelearn.spring.showcase.app.repository.OrderRepository;
+import gr.codelearn.spring.showcase.app.transfer.KeyValue;
+import gr.codelearn.spring.showcase.app.transfer.PurchasesAndCostPerCustomer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -101,6 +104,16 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
 
 	public Optional<Order> findWithAllAssociations(Long id) {
 		return orderRepository.findWithAllAssociations(id);
+	}
+
+	@Override
+	public List<KeyValue<String, BigDecimal>> findAverageOrderCostPerCustomer() {
+		return orderRepository.findAverageOrderCostPerCustomer();
+	}
+
+	@Override
+	public List<PurchasesAndCostPerCustomer> findTotalNumberAndCostOfPurchasesPerCustomerCategory() {
+		return orderRepository.findTotalNumberAndCostOfPurchasesPerCustomerCategory();
 	}
 
 	private boolean checkNullability(Order order, Product product) {
